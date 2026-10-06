@@ -31,6 +31,25 @@ th{background:#f7fafb;position:sticky;top:72px}
 </style>
 </head>
 <body>
+  <div id="lockScreen" style="position:fixed;inset:0;background:#f3f6f8;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px">
+<div style="background:white;padding:25px;border-radius:15px;width:100%;max-width:350px;text-align:center;box-shadow:0 4px 20px #0002">
+<h2>🔐 Barakah Cash Book</h2>
+<p>পাসওয়ার্ড দিয়ে প্রবেশ করুন</p>
+<input id="passwordInput" type="password" inputmode="numeric" maxlength="4" placeholder="Password" style="width:100%;padding:12px;border:1px solid #ccc;border-radius:9px;font-size:18px;text-align:center">
+<button onclick="unlock()" style="margin-top:12px;background:#0f766e;color:white;width:100%;padding:12px;border:0;border-radius:9px;font-size:16px">🔓 খুলুন</button>
+<p id="passwordError" style="color:red"></p>
+</div>
+</div>
+
+<script>
+function unlock(){
+if(document.getElementById('passwordInput').value==='6175'){
+document.getElementById('lockScreen').style.display='none';
+}else{
+document.getElementById('passwordError').textContent='ভুল পাসওয়ার্ড!';
+}
+}
+</script>
 <header><h1>📒 আমার Cash Book</h1><div class="sub">DP ও INS-এর দৈনিক হিসাব</div></header>
 <div class="container">
 <div class="card">

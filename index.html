@@ -1,105 +1,387 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="theme-color" content="#0f766e">
-<title>আমার Cash Book</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f172a">
+<title>Barakah Cash Book</title>
+
 <style>
-*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;background:#f3f6f8;color:#17202a}
-header{background:#0f766e;color:#fff;padding:18px 14px;position:sticky;top:0;z-index:5}
-h1{font-size:21px;margin:0 0 4px}.sub{font-size:13px;opacity:.9}
-.container{padding:12px;max-width:900px;margin:auto}
-.card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px #00000012}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-label{font-size:12px;font-weight:700;color:#52606d;display:block;margin-bottom:4px}
-input{width:100%;padding:11px;border:1px solid #d5dce1;border-radius:9px;font-size:16px;background:#fff}
-button{border:0;border-radius:9px;padding:11px 14px;font-weight:700;font-size:15px;cursor:pointer}
-.primary{background:#0f766e;color:white;width:100%;margin-top:10px}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f1f5f9;color:#172033}
+#lock{position:fixed;inset:0;background:#0f172a;display:flex;align-items:center;justify-content:center;z-index:10}
+.lockbox{background:white;padding:30px;border-radius:20px;width:90%;max-width:350px;text-align:center}
+.lockbox h2{margin:10px 0}
+input{width:100%;padding:12px;margin:5px 0 10px;border:1px solid #cbd5e1;border-radius:9px;font-size:16px}
+button{border:0;border-radius:9px;padding:11px 15px;font-size:15px;font-weight:bold;cursor:pointer}
+.primary{background:#0f766e;color:white;width:100%}
 .danger{background:#fee2e2;color:#991b1b}
-.small{font-size:12px;color:#667085}
-.summary{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.sum{background:#f0fdfa;border:1px solid #ccfbf1;border-radius:10px;padding:10px}.sum b{display:block;font-size:18px;margin-top:3px}
-.total{background:#ecfdf5;border-color:#a7f3d0}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
-th,td{padding:8px 6px;border-bottom:1px solid #e8edf0;text-align:left;white-space:nowrap}
-th{background:#f7fafb;position:sticky;top:72px}
-.tablewrap{overflow:auto}
-.row-actions button{padding:6px 8px;font-size:12px}
-.empty{text-align:center;color:#8a94a0;padding:20px}
-@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.summary{grid-template-columns:1fr 1fr} .container{padding:9px} h1{font-size:19px}}
+.secondary{background:#475569;color:white}
+#app{display:none;max-width:1000px;margin:auto;padding:10px}
+header{background:#0f172a;color:white;padding:18px;border-radius:15px;margin-bottom:12px}
+header h1{margin:0}
+header p{margin:5px 0 0;color:#cbd5e1}
+.card{background:white;padding:15px;border-radius:15px;margin-bottom:12px;box-shadow:0 2px 8px #0001}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+label{font-size:13px;font-weight:bold;color:#475569}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:5px}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:#f8fafc;padding:10px;border-radius:10px}
+.stat small{display:block;color:#64748b}
+.stat b{font-size:18px}
+.table{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:850px}
+th,td{padding:8px;border-bottom:1px solid #e2e8f0;white-space:nowrap}
+th{background:#f8fafc}
+.edit{background:#e2e8f0}
+.del{background:#fee2e2;color:#991b1b}
+#error{color:#b91c1c;height:22px}
+@media(max-width:650px){
+.grid{grid-template-columns:1fr 1fr}
+.summary{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
+
 <body>
-  <div id="lockScreen" style="position:fixed;inset:0;background:#f3f6f8;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px">
-<div style="background:white;padding:25px;border-radius:15px;width:100%;max-width:350px;text-align:center;box-shadow:0 4px 20px #0002">
-<h2>🔐 Barakah Cash Book</h2>
-<p>পাসওয়ার্ড দিয়ে প্রবেশ করুন</p>
-<input id="passwordInput" type="password" inputmode="numeric" maxlength="4" placeholder="Password" style="width:100%;padding:12px;border:1px solid #ccc;border-radius:9px;font-size:18px;text-align:center">
-<button onclick="unlock()" style="margin-top:12px;background:#0f766e;color:white;width:100%;padding:12px;border:0;border-radius:9px;font-size:16px">🔓 খুলুন</button>
-<p id="passwordError" style="color:red"></p>
+
+<div id="lock">
+<div class="lockbox">
+<div style="font-size:50px">🔐</div>
+<h2>Barakah Cash Book</h2>
+<p>পাসওয়ার্ড দিয়ে প্রবেশ করুন</p>
+<input id="password" type="password" inputmode="numeric" maxlength="4" placeholder="••••">
+<div id="error"></div>
+<button class="primary" onclick="login()">প্রবেশ করুন</button>
 </div>
 </div>
 
+<div id="app">
+
+<header>
+<h1>📒 Barakah Cash Book</h1>
+<p>DP ও INS-এর দৈনিক হিসাব</p>
+</header>
+
+<div class="card">
+<h3>নতুন হিসাব</h3>
+
+<div class="grid">
+
+<div>
+<label>তারিখ</label>
+<input id="date" type="date">
+</div>
+
+<div>
+<label>Customer Serial</label>
+<input id="serial">
+</div>
+
+<div>
+<label>Customer Name</label>
+<input id="name">
+</div>
+
+<div>
+<label>DP</label>
+<input id="dp" type="number">
+</div>
+
+<div>
+<label>INS Cash</label>
+<input id="cash" type="number">
+</div>
+
+<div>
+<label>INS bKash</label>
+<input id="bkash" type="number">
+</div>
+
+<div>
+<label>INS Nagad</label>
+<input id="nagad" type="number">
+</div>
+
+</div>
+
+<div class="actions">
+<button id="saveBtn" class="primary" style="width:auto" onclick="saveEntry()">➕ হিসাব যোগ করুন</button>
+<button class="secondary" onclick="clearForm()">ফর্ম পরিষ্কার</button>
+<button class="danger" onclick="clearAll()">সব হিসাব মুছুন</button>
+</div>
+</div>
+
+<div class="card">
+<h3>📊 মোট হিসাব</h3>
+
+<div class="summary">
+
+<div class="stat">
+<small>মোট DP</small>
+<b id="totalDP">0.00</b>
+</div>
+
+<div class="stat">
+<small>INS Cash</small>
+<b id="totalCash">0.00</b>
+</div>
+
+<div class="stat">
+<small>INS bKash</small>
+<b id="totalBkash">0.00</b>
+</div>
+
+<div class="stat">
+<small>INS Nagad</small>
+<b id="totalNagad">0.00</b>
+</div>
+
+<div class="stat">
+<small>INS Total</small>
+<b id="totalINS">0.00</b>
+</div>
+
+<div class="stat">
+<small>Grand Total</small>
+<b id="grandTotal">0.00</b>
+</div>
+
+</div>
+</div>
+
+<div class="card">
+<h3>📋 হিসাবের তালিকা</h3>
+
+<div class="table">
+<table>
+<thead>
+<tr>
+<th>তারিখ</th>
+<th>Serial</th>
+<th>নাম</th>
+<th>DP</th>
+<th>Cash</th>
+<th>bKash</th>
+<th>Nagad</th>
+<th>INS Total</th>
+<th>Total</th>
+<th>কাজ</th>
+</tr>
+</thead>
+
+<tbody id="rows"></tbody>
+
+</table>
+</div>
+</div>
+
+</div>
+
 <script>
-function unlock(){
-if(document.getElementById('passwordInput').value==='6175'){
-document.getElementById('lockScreen').style.display='none';
+
+const KEY="barakah_cash_book";
+let data=JSON.parse(localStorage.getItem(KEY)||"[]");
+let editIndex=-1;
+
+function $(id){
+return document.getElementById(id);
+}
+
+function money(n){
+return (Number(n)||0).toFixed(2);
+}
+
+function today(){
+let d=new Date();
+d.setMinutes(d.getMinutes()-d.getTimezoneOffset());
+return d.toISOString().slice(0,10);
+}
+
+function login(){
+
+if($("password").value==="6175"){
+
+$("lock").style.display="none";
+$("app").style.display="block";
+sessionStorage.setItem("login","yes");
+
+$("date").value=today();
+
+render();
+
 }else{
-document.getElementById('passwordError').textContent='ভুল পাসওয়ার্ড!';
-}
-}
-</script>
-<header><h1>📒 আমার Cash Book</h1><div class="sub">DP ও INS-এর দৈনিক হিসাব</div></header>
-<div class="container">
-<div class="card">
-  <div class="grid">
-    <div><label>তারিখ</label><input id="date" type="date"></div>
-    <div><label>কাস্টমারের সিরিয়াল নং</label><input id="serial" inputmode="numeric" placeholder="যেমন 324"></div>
-    <div style="grid-column:1/-1"><label>কাস্টমারের নাম</label><input id="name" placeholder="কাস্টমারের নাম"></div>
-    <div><label>DP</label><input id="dp" type="number" inputmode="decimal" min="0" placeholder="0"></div>
-    <div><label>INS Cash</label><input id="cash" type="number" inputmode="decimal" min="0" placeholder="0"></div>
-    <div><label>INS bKash</label><input id="bkash" type="number" inputmode="decimal" min="0" placeholder="0"></div>
-    <div><label>INS Nagad</label><input id="nagad" type="number" inputmode="decimal" min="0" placeholder="0"></div>
-  </div>
-  <button class="primary" onclick="addEntry()">➕ হিসাব যোগ করুন</button>
-</div>
 
-<div class="card">
-  <div class="summary">
-    <div class="sum"><span>মোট DP</span><b id="sdp">৳0</b></div>
-    <div class="sum"><span>INS Cash</span><b id="scash">৳0</b></div>
-    <div class="sum"><span>INS bKash</span><b id="sbkash">৳0</b></div>
-    <div class="sum"><span>INS Nagad</span><b id="snagad">৳0</b></div>
-    <div class="sum"><span>INS Total</span><b id="sins">৳0</b></div>
-    <div class="sum total"><span>সর্বমোট</span><b id="stotal">৳0</b></div>
-  </div>
-</div>
+$("error").textContent="পাসওয়ার্ড ভুল হয়েছে";
+$("password").value="";
 
-<div class="card">
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-    <div><b>এন্ট্রির তালিকা</b><div class="small">ডেটা এই ফোনের ব্রাউজারেই সংরক্ষিত থাকবে।</div></div>
-    <button class="danger" onclick="clearAll()">সব মুছুন</button>
-  </div>
-  <div class="tablewrap" style="margin-top:10px">
-    <table><thead><tr><th>তারিখ</th><th>নাম</th><th>সিরিয়াল</th><th>DP</th><th>INS Cash</th><th>INS bKash</th><th>INS Nagad</th><th>INS Total</th><th>সর্বমোট</th><th></th></tr></thead>
-    <tbody id="rows"></tbody></table>
-  </div>
-</div>
-</div>
-<script>
-const KEY='my_cash_book_v2', OLD_KEY='my_cash_book_v1';
-const $=id=>document.getElementById(id);
-const num=id=>{const v=String($(id).value||'').replace(/,/g,'').trim();const n=Number(v);return Number.isFinite(n)?n:0};
-const money=x=>'৳'+Math.round(Number(x)||0).toLocaleString('en-US');
-function loadData(){try{let raw=localStorage.getItem(KEY);if(raw===null){raw=localStorage.getItem(OLD_KEY)||'[]';if(raw!=='[]')localStorage.setItem(KEY,raw)}const d=JSON.parse(raw);return Array.isArray(d)?d:[]}catch(e){return []}}
-let data=loadData();
-function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
-function addEntry(){const name=$('name').value.trim();if(!name){alert('কাস্টমারের নাম লিখুন।');$('name').focus();return}const dp=num('dp'),cash=num('cash'),bkash=num('bkash'),nagad=num('nagad'),ins=cash+bkash+nagad;data.unshift({id:Date.now(),date:$('date').value||new Date().toISOString().slice(0,10),serial:$('serial').value.trim(),name,dp,cash,bkash,nagad,ins,total:dp+ins});save();['serial','name','dp','cash','bkash','nagad'].forEach(id=>$(id).value='');$('name').focus()}
-function deleteEntry(id){if(confirm('এই হিসাবটি মুছে ফেলবেন?')){data=data.filter(e=>e.id!==id);save()}}
-function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function render(){let dpT=0,cashT=0,bkashT=0,nagadT=0;const rows=data.map(e=>{const dp=Number(e.dp)||0,cash=Number(e.cash)||0,bkash=Number(e.bkash)||0,nagad=Number(e.nagad)||0,ins=cash+bkash+nagad,total=dp+ins;dpT+=dp;cashT+=cash;bkashT+=bkash;nagadT+=nagad;return `<tr><td>${escapeHtml(e.date||'')}</td><td>${escapeHtml(e.serial||'')}</td><td>${escapeHtml(e.name||'')}</td><td>${money(dp)}</td><td>${money(cash)}</td><td>${money(bkash)}</td><td>${money(nagad)}</td><td>${money(ins)}</td><td>${money(total)}</td><td><button class="del" onclick="deleteEntry(${Number(e.id)})">মুছুন</button></td></tr>`}).join('');$('sdp').textContent=money(dpT);$('scash').textContent=money(cashT);$('sbkash').textContent=money(bkashT);$('snagad').textContent=money(nagadT);const insT=cashT+bkashT+nagadT;$('sins').textContent=money(insT);$('stotal').textContent=money(dpT+insT);$('tbody').innerHTML=rows||`<tr><td colspan="10" style="text-align:center;padding:20px">এখনও কোনো হিসাব যোগ করা হয়নি।</td></tr>`}
-document.addEventListener('DOMContentLoaded',()=>{$('date').value=new Date().toISOString().slice(0,10);$('addBtn').addEventListener('click',addEntry);render()});
+}
+
+}
+
+function saveEntry(){
+
+let entry={
+date:$("date").value||today(),
+serial:$("serial").value,
+name:$("name").value,
+dp:Number($("dp").value)||0,
+cash:Number($("cash").value)||0,
+bkash:Number($("bkash").value)||0,
+nagad:Number($("nagad").value)||0
+};
+
+if(!entry.name && !entry.serial){
+
+alert("Customer Name অথবা Serial দিন");
+return;
+
+}
+
+if(editIndex>=0){
+
+data[editIndex]=entry;
+editIndex=-1;
+$("saveBtn").textContent="➕ হিসাব যোগ করুন";
+
+}else{
+
+data.push(entry);
+
+}
+
+localStorage.setItem(KEY,JSON.stringify(data));
+
+clearForm();
+render();
+
+}
+
+function editEntry(i){
+
+let e=data[i];
+
+$("date").value=e.date;
+$("serial").value=e.serial;
+$("name").value=e.name;
+$("dp").value=e.dp;
+$("cash").value=e.cash;
+$("bkash").value=e.bkash;
+$("nagad").value=e.nagad;
+
+editIndex=i;
+$("saveBtn").textContent="💾 হিসাব আপডেট করুন";
+
+window.scrollTo(0,0);
+
+}
+
+function deleteEntry(i){
+
+if(confirm("এই হিসাবটি মুছে ফেলবেন?")){
+
+data.splice(i,1);
+localStorage.setItem(KEY,JSON.stringify(data));
+render();
+
+}
+
+}
+
+function clearAll(){
+
+if(data.length && confirm("সব হিসাব মুছে ফেলবেন?")){
+
+data=[];
+localStorage.setItem(KEY,JSON.stringify(data));
+render();
+
+}
+
+}
+
+function clearForm(){
+
+$("date").value=today();
+$("serial").value="";
+$("name").value="";
+$("dp").value="";
+$("cash").value="";
+$("bkash").value="";
+$("nagad").value="";
+
+editIndex=-1;
+$("saveBtn").textContent="➕ হিসাব যোগ করুন";
+
+}
+
+function render(){
+
+let dp=0,cash=0,bkash=0,nagad=0;
+
+$("rows").innerHTML="";
+
+data.forEach((e,i)=>{
+
+dp+=e.dp;
+cash+=e.cash;
+bkash+=e.bkash;
+nagad+=e.nagad;
+
+let ins=e.cash+e.bkash+e.nagad;
+let total=e.dp+ins;
+
+$("rows").innerHTML+=`
+
+<tr>
+
+<td>${e.date}</td>
+<td>${e.serial}</td>
+<td>${e.name}</td>
+<td>${money(e.dp)}</td>
+<td>${money(e.cash)}</td>
+<td>${money(e.bkash)}</td>
+<td>${money(e.nagad)}</td>
+<td>${money(ins)}</td>
+<td><b>${money(total)}</b></td>
+
+<td>
+<button class="edit" onclick="editEntry(${i})">✏️</button>
+<button class="del" onclick="deleteEntry(${i})">🗑️</button>
+</td>
+
+</tr>
+
+`;
+
+});
+
+let ins=cash+bkash+nagad;
+
+$("totalDP").textContent=money(dp);
+$("totalCash").textContent=money(cash);
+$("totalBkash").textContent=money(bkash);
+$("totalNagad").textContent=money(nagad);
+$("totalINS").textContent=money(ins);
+$("grandTotal").textContent=money(dp+ins);
+
+}
+
+window.onload=function(){
+
+$("date").value=today();
+
+if(sessionStorage.getItem("login")==="yes"){
+
+$("lock").style.display="none";
+$("app").style.display="block";
+render();
+
+}
+
+};
+
 </script>
+
 </body>
 </html>

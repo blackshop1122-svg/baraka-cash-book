@@ -2,69 +2,231 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0f172a">
 <title>Barakah Cash Book</title>
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f1f5f9;color:#172033}
-#lock{position:fixed;inset:0;background:#0f172a;display:flex;align-items:center;justify-content:center;z-index:10}
-.lockbox{background:white;padding:30px;border-radius:20px;width:90%;max-width:350px;text-align:center}
-.lockbox h2{margin:10px 0}
-input{width:100%;padding:12px;margin:5px 0 10px;border:1px solid #cbd5e1;border-radius:9px;font-size:16px}
-button{border:0;border-radius:9px;padding:11px 15px;font-size:15px;font-weight:bold;cursor:pointer}
-.primary{background:#0f766e;color:white;width:100%}
-.danger{background:#fee2e2;color:#991b1b}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#f1f5f9;
+ color:#172033
+}
+#lock{
+ position:fixed;
+ inset:0;
+ background:#0f172a;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ z-index:10
+}
+.lockbox{
+ background:white;
+ padding:30px;
+ border-radius:20px;
+ width:90%;
+ max-width:350px;
+ text-align:center
+}
+input,select{
+ width:100%;
+ padding:11px;
+ margin:5px 0 9px;
+ border:1px solid #cbd5e1;
+ border-radius:9px;
+ font-size:16px
+}
+button{
+ border:0;
+ border-radius:9px;
+ padding:10px 13px;
+ font-size:15px;
+ font-weight:bold;
+ cursor:pointer
+}
+.primary{background:#0f766e;color:white}
 .secondary{background:#475569;color:white}
-#app{display:none;max-width:1000px;margin:auto;padding:10px}
-header{background:#0f172a;color:white;padding:18px;border-radius:15px;margin-bottom:12px}
+.danger{background:#fee2e2;color:#991b1b}
+#app{
+ max-width:1100px;
+ margin:auto;
+ padding:10px
+}
+header{
+ background:#0f172a;
+ color:white;
+ padding:18px;
+ border-radius:15px;
+ margin-bottom:12px
+}
 header h1{margin:0}
-header p{margin:5px 0 0;color:#cbd5e1}
-.card{background:white;padding:15px;border-radius:15px;margin-bottom:12px;box-shadow:0 2px 8px #0001}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-label{font-size:13px;font-weight:bold;color:#475569}
-.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:5px}
-.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.stat{background:#f8fafc;padding:10px;border-radius:10px}
-.stat small{display:block;color:#64748b}
-.stat b{font-size:18px}
+header p{
+ margin:5px 0 0;
+ color:#cbd5e1
+}
+.card{
+ background:white;
+ padding:15px;
+ border-radius:15px;
+ margin-bottom:12px;
+ box-shadow:0 2px 8px #0001
+}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:8px
+}
+label{
+ font-size:13px;
+ font-weight:bold;
+ color:#475569
+}
+.actions{
+ display:flex;
+ gap:7px;
+ flex-wrap:wrap;
+ margin-top:5px
+}
+.nav{
+ display:flex;
+ gap:8px;
+ align-items:center
+}
+.nav button{
+ flex:0 0 auto
+}
+.nav select{
+ margin:0
+}
+.summary{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:8px
+}
+.stat{
+ padding:10px;
+ border-radius:10px
+}
+.stat small{
+ display:block;
+ color:#475569
+}
+.stat b{
+ font-size:18px
+}
+.dp{background:#fef3c7}
+.dpb{background:#dcfce7}
+.dpn{background:#f3e8ff}
+.cash{background:#dbeafe}
+.bk{background:#ccfbf1}
+.nag{background:#ffedd5}
+.ins{background:#e0f2fe}
+.total{background:#e2e8f0}
 .table{overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:850px}
-th,td{padding:8px;border-bottom:1px solid #e2e8f0;white-space:nowrap}
+table{
+ width:100%;
+ border-collapse:collapse;
+ min-width:1050px
+}
+th,td{
+ padding:8px;
+ border-bottom:1px solid #e2e8f0;
+ white-space:nowrap
+}
 th{background:#f8fafc}
 .edit{background:#e2e8f0}
-.del{background:#fee2e2;color:#991b1b}
-#error{color:#b91c1c;height:22px}
+.del{
+ background:#fee2e2;
+ color:#991b1b
+}
+#error{
+ color:#b91c1c;
+ height:22px
+}
 @media(max-width:650px){
-.grid{grid-template-columns:1fr 1fr}
-.summary{grid-template-columns:1fr 1fr}
+ .grid{grid-template-columns:1fr 1fr}
+ .summary{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
 
 <body>
 
+<!-- PASSWORD -->
 <div id="lock">
-<div class="lockbox">
-<div style="font-size:50px">🔐</div>
-<h2>Barakah Cash Book</h2>
-<p>পাসওয়ার্ড দিয়ে প্রবেশ করুন</p>
-<input id="password" type="password" inputmode="numeric" maxlength="4" placeholder="••••">
-<div id="error"></div>
-<button class="primary" onclick="login()">প্রবেশ করুন</button>
-</div>
+ <div class="lockbox">
+  <div style="font-size:50px">🔐</div>
+  <h2>Barakah Cash Book</h2>
+  <p>পাসওয়ার্ড দিয়ে প্রবেশ করুন</p>
+
+  <input
+   id="password"
+   type="password"
+   inputmode="numeric"
+   maxlength="4"
+   placeholder="••••"
+  >
+
+  <div id="error"></div>
+
+  <button
+   class="primary"
+   style="width:100%"
+   onclick="login()"
+  >
+   প্রবেশ করুন
+  </button>
+ </div>
 </div>
 
-<div id="app">
+
+<!-- APP -->
+<div id="app" style="display:none">
 
 <header>
-<h1>📒 Barakah Cash Book</h1>
-<p>DP ও INS-এর দৈনিক হিসাব</p>
+ <h1>📒 Barakah Cash Book</h1>
+ <p>মাসভিত্তিক DP ও INS হিসাব</p>
 </header>
 
+
+<!-- MONTH -->
 <div class="card">
-<h3>নতুন হিসাব</h3>
+
+ <h3>📅 হিসাবের মাস</h3>
+
+ <div class="nav">
+
+  <button
+   class="secondary"
+   onclick="moveMonth(-1)"
+  >
+   ◀
+  </button>
+
+  <select
+   id="month"
+   onchange="changeMonth()"
+  ></select>
+
+  <button
+   class="secondary"
+   onclick="moveMonth(1)"
+  >
+   ▶
+  </button>
+
+ </div>
+
+</div>
+
+
+<!-- ENTRY -->
+<div class="card">
+
+<h3>➕ নতুন হিসাব</h3>
 
 <div class="grid">
 
@@ -89,6 +251,16 @@ th{background:#f8fafc}
 </div>
 
 <div>
+<label>DP bKash</label>
+<input id="dpBkash" type="number">
+</div>
+
+<div>
+<label>DP Nagad</label>
+<input id="dpNagad" type="number">
+</div>
+
+<div>
 <label>INS Cash</label>
 <input id="cash" type="number">
 </div>
@@ -105,44 +277,81 @@ th{background:#f8fafc}
 
 </div>
 
+
 <div class="actions">
-<button id="saveBtn" class="primary" style="width:auto" onclick="saveEntry()">➕ হিসাব যোগ করুন</button>
-<button class="secondary" onclick="clearForm()">ফর্ম পরিষ্কার</button>
-<button class="danger" onclick="clearAll()">সব হিসাব মুছুন</button>
-</div>
+
+<button
+ id="saveBtn"
+ class="primary"
+ onclick="saveEntry()"
+>
+➕ হিসাব যোগ করুন
+</button>
+
+<button
+ class="secondary"
+ onclick="clearForm()"
+>
+ফর্ম পরিষ্কার
+</button>
+
+<button
+ class="danger"
+ onclick="clearAll()"
+>
+🗑️ সব হিসাব মুছুন
+</button>
+
 </div>
 
+</div>
+
+
+<!-- SUMMARY -->
 <div class="card">
-<h3>📊 মোট হিসাব</h3>
+
+<h3>
+📊 <span id="monthTitle"></span> মোট
+</h3>
 
 <div class="summary">
 
-<div class="stat">
-<small>মোট DP</small>
+<div class="stat dp">
+<small>DP</small>
 <b id="totalDP">0.00</b>
 </div>
 
-<div class="stat">
+<div class="stat dpb">
+<small>DP bKash</small>
+<b id="totalDPBkash">0.00</b>
+</div>
+
+<div class="stat dpn">
+<small>DP Nagad</small>
+<b id="totalDPNagad">0.00</b>
+</div>
+
+<div class="stat cash">
 <small>INS Cash</small>
 <b id="totalCash">0.00</b>
 </div>
 
-<div class="stat">
+<div class="stat bk">
 <small>INS bKash</small>
 <b id="totalBkash">0.00</b>
 </div>
 
-<div class="stat">
+<div class="stat nag">
 <small>INS Nagad</small>
 <b id="totalNagad">0.00</b>
 </div>
 
-<div class="stat">
+<div class="stat ins">
 <small>INS Total</small>
 <b id="totalINS">0.00</b>
 </div>
 
-<div class="stat">
+<div class="stat total">
 <small>Grand Total</small>
 <b id="grandTotal">0.00</b>
 </div>
@@ -150,238 +359,454 @@ th{background:#f8fafc}
 </div>
 </div>
 
+
+<!-- TABLE -->
 <div class="card">
-<h3>📋 হিসাবের তালিকা</h3>
+
+<h3>
+📋 <span id="listTitle"></span> হিসাব
+</h3>
 
 <div class="table">
+
 <table>
+
 <thead>
+
 <tr>
 <th>তারিখ</th>
 <th>Serial</th>
 <th>নাম</th>
 <th>DP</th>
-<th>Cash</th>
-<th>bKash</th>
-<th>Nagad</th>
+<th>DP bKash</th>
+<th>DP Nagad</th>
+<th>INS Cash</th>
+<th>INS bKash</th>
+<th>INS Nagad</th>
 <th>INS Total</th>
 <th>Total</th>
 <th>কাজ</th>
 </tr>
+
 </thead>
 
 <tbody id="rows"></tbody>
 
 </table>
-</div>
+
 </div>
 
 </div>
+
+
+<!-- BACKUP RESTORE -->
+<div class="card">
+
+<h3>💾 Backup / Restore</h3>
+
+<div class="actions">
+
+<button
+ class="primary"
+ onclick="backup()"
+>
+⬇️ Backup করুন
+</button>
+
+<button
+ class="secondary"
+ onclick="restore()"
+>
+♻️ Restore করুন
+</button>
+
+<input
+ id="file"
+ type="file"
+ accept=".json,application/json"
+ style="display:none"
+>
+
+</div>
+
+<p style="font-size:13px;color:#64748b">
+Backup ফাইল নিরাপদ জায়গায় রেখে দিন।
+Restore করতে 6175 পাসওয়ার্ড লাগবে।
+</p>
+
+</div>
+
+</div>
+
 
 <script>
 
 const KEY="barakah_cash_book";
-let data=JSON.parse(localStorage.getItem(KEY)||"[]");
+const MONTHKEY="barakah_current_month";
+const PASS="6175";
+
+let data=JSON.parse(
+ localStorage.getItem(KEY)||"[]"
+);
+
 let editIndex=-1;
 
+let currentMonth=
+ localStorage.getItem(MONTHKEY) ||
+ new Date().toISOString().slice(0,7);
+
+
+/* BASIC */
+
 function $(id){
-return document.getElementById(id);
+ return document.getElementById(id);
 }
+
 
 function money(n){
-return (Number(n)||0).toFixed(2);
+ return (Number(n)||0).toFixed(2);
 }
 
+
 function today(){
-let d=new Date();
-d.setMinutes(d.getMinutes()-d.getTimezoneOffset());
-return d.toISOString().slice(0,10);
+
+ let d=new Date();
+
+ d.setMinutes(
+  d.getMinutes()-d.getTimezoneOffset()
+ );
+
+ return d.toISOString().slice(0,10);
 }
+
+
+function ym(d){
+
+ return String(d||"").slice(0,7)
+ || today().slice(0,7);
+
+}
+
+
+/* OLD DATA MIGRATION */
+
+function migrate(){
+
+ let changed=false;
+
+ data=data.map(e=>{
+
+  if(!e.month){
+   e.month=ym(e.date);
+   changed=true;
+  }
+
+  e.dpBkash=
+   Number(e.dpBkash)||0;
+
+  e.dpNagad=
+   Number(e.dpNagad)||0;
+
+  return e;
+
+ });
+
+ if(changed){
+
+  localStorage.setItem(
+   KEY,
+   JSON.stringify(data)
+  );
+
+ }
+
+}
+
+
+/* MONTHS */
+
+function months(){
+
+ let s=new Set();
+
+ s.add(currentMonth);
+ s.add(today().slice(0,7));
+
+ data.forEach(e=>{
+
+  s.add(
+   e.month ||
+   ym(e.date)
+  );
+
+ });
+
+ return [...s].sort();
+
+}
+
+
+function monthName(m){
+
+ let names=[
+  "জানুয়ারি",
+  "ফেব্রুয়ারি",
+  "মার্চ",
+  "এপ্রিল",
+  "মে",
+  "জুন",
+  "জুলাই",
+  "আগস্ট",
+  "সেপ্টেম্বর",
+  "অক্টোবর",
+  "নভেম্বর",
+  "ডিসেম্বর"
+ ];
+
+ let p=m.split("-");
+
+ return names[
+  Number(p[1])-1
+ ]+" "+p[0];
+
+}
+
+
+function fillMonths(){
+
+ let list=months();
+
+ $("month").innerHTML=
+  list.map(x=>
+   '<option value="'+x+'">'+
+   monthName(x)+
+   '</option>'
+  ).join("");
+
+ $("month").value=currentMonth;
+
+}
+
+
+function setDateForMonth(){
+
+ let t=today();
+
+ if(
+  currentMonth===
+  t.slice(0,7)
+ ){
+
+  $("date").value=t;
+
+ }else{
+
+  $("date").value=
+   currentMonth+"-01";
+
+ }
+
+}
+
+
+/* LOGIN */
 
 function login(){
 
-if($("password").value==="6175"){
+ if(
+  $("password").value===
+  PASS
+ ){
 
-$("lock").style.display="none";
-$("app").style.display="block";
-sessionStorage.setItem("login","yes");
+  $("lock").style.display="none";
 
-$("date").value=today();
+  $("app").style.display="block";
 
-render();
+  sessionStorage.setItem(
+   "login",
+   "yes"
+  );
 
-}else{
+  migrate();
 
-$("error").textContent="পাসওয়ার্ড ভুল হয়েছে";
-$("password").value="";
+  fillMonths();
+
+  setDateForMonth();
+
+  render();
+
+ }else{
+
+  $("error").textContent=
+   "পাসওয়ার্ড ভুল হয়েছে";
+
+  $("password").value="";
+
+ }
 
 }
 
+
+/* CHANGE MONTH */
+
+function changeMonth(){
+
+ currentMonth=
+  $("month").value;
+
+ localStorage.setItem(
+  MONTHKEY,
+  currentMonth
+ );
+
+ editIndex=-1;
+
+ fillMonths();
+
+ setDateForMonth();
+
+ render();
+
 }
+
+
+function moveMonth(n){
+
+ let d=new Date(
+  currentMonth+"-01T00:00:00"
+ );
+
+ d.setMonth(
+  d.getMonth()+n
+ );
+
+ currentMonth=
+  d.toISOString().slice(0,7);
+
+ localStorage.setItem(
+  MONTHKEY,
+  currentMonth
+ );
+
+ fillMonths();
+
+ setDateForMonth();
+
+ render();
+
+}
+
+
+/* SAVE */
 
 function saveEntry(){
 
-let entry={
-date:$("date").value||today(),
-serial:$("serial").value,
-name:$("name").value,
-dp:Number($("dp").value)||0,
-cash:Number($("cash").value)||0,
-bkash:Number($("bkash").value)||0,
-nagad:Number($("nagad").value)||0
-};
+ let entry={
 
-if(!entry.name && !entry.serial){
+  date:
+   $("date").value ||
+   today(),
 
-alert("Customer Name অথবা Serial দিন");
-return;
+  month:
+   currentMonth,
+
+  serial:
+   $("serial").value.trim(),
+
+  name:
+   $("name").value.trim(),
+
+  dp:
+   Number($("dp").value)||0,
+
+  dpBkash:
+   Number($("dpBkash").value)||0,
+
+  dpNagad:
+   Number($("dpNagad").value)||0,
+
+  cash:
+   Number($("cash").value)||0,
+
+  bkash:
+   Number($("bkash").value)||0,
+
+  nagad:
+   Number($("nagad").value)||0
+
+ };
+
+
+ if(
+  !entry.name &&
+  !entry.serial
+ ){
+
+  alert(
+   "Customer Name অথবা Serial দিন"
+  );
+
+  return;
+
+ }
+
+
+ if(editIndex>=0){
+
+  data[editIndex]=entry;
+
+  editIndex=-1;
+
+ }else{
+
+  data.push(entry);
+
+ }
+
+
+ localStorage.setItem(
+  KEY,
+  JSON.stringify(data)
+ );
+
+ clearForm();
+
+ fillMonths();
+
+ render();
 
 }
 
-if(editIndex>=0){
 
-data[editIndex]=entry;
-editIndex=-1;
-$("saveBtn").textContent="➕ হিসাব যোগ করুন";
-
-}else{
-
-data.push(entry);
-
-}
-
-localStorage.setItem(KEY,JSON.stringify(data));
-
-clearForm();
-render();
-
-}
+/* EDIT */
 
 function editEntry(i){
 
-let e=data[i];
+ let e=data[i];
 
-$("date").value=e.date;
-$("serial").value=e.serial;
-$("name").value=e.name;
-$("dp").value=e.dp;
-$("cash").value=e.cash;
-$("bkash").value=e.bkash;
-$("nagad").value=e.nagad;
+ $("date").value=e.date;
 
-editIndex=i;
-$("saveBtn").textContent="💾 হিসাব আপডেট করুন";
+ $("serial").value=e.serial;
 
-window.scrollTo(0,0);
+ $("name").value=e.name;
 
-}
+ $("dp").value=e.dp;
 
-function deleteEntry(i){
+ $("dpBkash").value=
+  e.dpBkash||0;
 
-if(confirm("এই হিসাবটি মুছে ফেলবেন?")){
+ $("dpNagad").value=
+  e.dpNagad||0;
 
-data.splice(i,1);
-localStorage.setItem(KEY,JSON.stringify(data));
-render();
+ $("cash").value=e.cash;
 
-}
+ $("bkash").value=e.bkash;
 
-}
+ $("nagad").value=e.nagad;
 
-function clearAll(){
+ editIndex=i;
 
-if(data.length && confirm("সব হিসাব মুছে ফেলবেন?")){
+ $("saveBtn").textContent=
+  "💾 হিসাব আপডেট করুন";
 
-data=[];
-localStorage.setItem(KEY,JSON.stringify(data));
-render();
-
-}
-
-}
-
-function clearForm(){
-
-$("date").value=today();
-$("serial").value="";
-$("name").value="";
-$("dp").value="";
-$("cash").value="";
-$("bkash").value="";
-$("nagad").value="";
-
-editIndex=-1;
-$("saveBtn").textContent="➕ হিসাব যোগ করুন";
-
-}
-
-function render(){
-
-let dp=0,cash=0,bkash=0,nagad=0;
-
-$("rows").innerHTML="";
-
-data.forEach((e,i)=>{
-
-dp+=e.dp;
-cash+=e.cash;
-bkash+=e.bkash;
-nagad+=e.nagad;
-
-let ins=e.cash+e.bkash+e.nagad;
-let total=e.dp+ins;
-
-$("rows").innerHTML+=`
-
-<tr>
-
-<td>${e.date}</td>
-<td>${e.serial}</td>
-<td>${e.name}</td>
-<td>${money(e.dp)}</td>
-<td>${money(e.cash)}</td>
-<td>${money(e.bkash)}</td>
-<td>${money(e.nagad)}</td>
-<td>${money(ins)}</td>
-<td><b>${money(total)}</b></td>
-
-<td>
-<button class="edit" onclick="editEntry(${i})">✏️</button>
-<button class="del" onclick="deleteEntry(${i})">🗑️</button>
-</td>
-
-</tr>
-
-`;
-
-});
-
-let ins=cash+bkash+nagad;
-
-$("totalDP").textContent=money(dp);
-$("totalCash").textContent=money(cash);
-$("totalBkash").textContent=money(bkash);
-$("totalNagad").textContent=money(nagad);
-$("totalINS").textContent=money(ins);
-$("grandTotal").textContent=money(dp+ins);
-
-}
-
-window.onload=function(){
-
-$("date").value=today();
-
-if(sessionStorage.getItem("login")==="yes"){
-
-$("lock").style.display="none";
-$("app").style.display="block";
-render();
-
-}
-
-};
-
-</script>
-
-</body>
-</html>
+ window.scrollTo(0,0);
